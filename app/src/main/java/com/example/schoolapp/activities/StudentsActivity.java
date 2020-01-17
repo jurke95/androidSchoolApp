@@ -1,10 +1,13 @@
-package com.example.schoolapp;
+package com.example.schoolapp.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.schoolapp.R;
+import com.example.schoolapp.adapters.MyAdapter;
 
 import java.util.ArrayList;
 

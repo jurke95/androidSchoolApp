@@ -11,11 +11,11 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
     </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
         </activity>
-        <activity android:name=".ClassesActivity">
+        <activity android:name=".activities.ClassesActivity">
         </activity>
-        <activity android:name=".StudentsActivity">
+        <activity android:name=".activities.StudentsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,8 +1,10 @@
-package com.example.schoolapp;
+package com.example.schoolapp.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.schoolapp.R;
 
 public class LoginActivity extends AppCompatActivity {
     @Override
