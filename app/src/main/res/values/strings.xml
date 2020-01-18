@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SchoolApp</string>
+    <string name="hello_world">Hello from resource</string>
 </resources>
