@@ -1,41 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activities.StudentsActivity">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/recycler_view">
+    </androidx.recyclerview.widget.RecyclerView>
 
-        <!-- Your Current Card Layout Here -->
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:textSize="32dp"
-            android:gravity="center"
-            android:ems="10"
-            android:text="MY CLASS" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/my_card_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/student_recycler_view"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
