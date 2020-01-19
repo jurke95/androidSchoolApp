@@ -7,23 +7,22 @@
     android:orientation="vertical"
     tools:context=".activities.StudentsActivity">
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textSize="32dp"
-        android:gravity="center"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="My Class" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <!-- Your Current Card Layout Here -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:textSize="32dp"
+            android:gravity="center"
+            android:ems="10"
+            android:text="MY CLASS" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/my_card_view"
             android:layout_width="match_parent"
