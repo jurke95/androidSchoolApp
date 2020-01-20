@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.schoolapp.activities.StudentsActivity;
+import com.example.schoolapp.activities.SubjectsActivity;
 import com.google.android.material.navigation.NavigationView;
 
 
@@ -54,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_class:
                 Intent c = new Intent(this,StudentsActivity.class);
                 startActivity(c);
+                break;
+            case R.id.nav_subjects:
+                Intent s = new Intent(this, SubjectsActivity.class);
+                startActivity(s);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
