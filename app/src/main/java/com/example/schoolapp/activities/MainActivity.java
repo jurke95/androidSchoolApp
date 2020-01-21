@@ -1,4 +1,4 @@
-package com.example.schoolapp;
+package com.example.schoolapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,8 +9,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.schoolapp.R;
 import com.example.schoolapp.activities.StudentsActivity;
 import com.example.schoolapp.activities.SubjectsActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -60,8 +63,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent s = new Intent(this, SubjectsActivity.class);
                 startActivity(s);
                 break;
+            case R.id.nav_announcements:
+                drawer.closeDrawer(GravityCompat.START);
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.settings:
+                Intent s = new Intent(this, SettingsActivity.class);
+                startActivity(s);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
