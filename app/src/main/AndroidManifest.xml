@@ -21,11 +21,13 @@
         </activity>
         <activity android:name=".activities.ClassesActivity">
         </activity>
-        <activity android:name=".activities.StudentsActivity">
+        <activity android:name=".activities.StudentsActivity"
+            android:parentActivityName=".activities.MainActivity">
         </activity>
         <activity android:name=".activities.UserProfileActivity">
     </activity>
-        <activity android:name=".activities.SubjectsActivity">
+        <activity android:name=".activities.SubjectsActivity"
+        android:parentActivityName=".activities.MainActivity">
         </activity>
         <activity android:name=".activities.SettingsActivity">
         </activity>
