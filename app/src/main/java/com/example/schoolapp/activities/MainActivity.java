@@ -16,8 +16,12 @@ import android.view.MenuItem;
 import com.example.schoolapp.R;
 import com.example.schoolapp.activities.StudentsActivity;
 import com.example.schoolapp.activities.SubjectsActivity;
+import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -37,6 +41,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        //FrameLayout frame = new FrameLayout(this);
+        /*Fragment newFragment = new AnnouncementsFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.mainContent, newFragment).commit();*/
+
+        /*FragmentTransaction transaction = this.getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.mainContent, AnnouncementsFragment.newInstance());
+        transaction.commit();*/
+
+
+
+        //FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //ft.add(CONTENT_VIEW_ID, newFragment).commit();
 
     }
 

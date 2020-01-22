@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/announcement_parent"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:background="@color/colorPrimary"
+    android:layout_marginBottom="40dp"
+    android:layout_marginRight="5dp"
+    android:layout_margin="20dp"
+    >
+
+    <TextView
+        android:id="@+id/announcement_title"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/colorGray"
+        android:text="First class"
+        />
+
+
+    <TextView
+        android:id="@+id/announcement_description"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:background="@color/colorWhite"
+        android:text="You won't have first class because the profesor is sick."
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="COMMENTS"/>
+
+
+</RelativeLayout>
