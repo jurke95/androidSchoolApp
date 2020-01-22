@@ -4,7 +4,10 @@
     android:id="@+id/announcement_parent"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="@color/design_default_color_primary_dark"
+    android:background="@color/colorPrimary"
+    android:layout_marginBottom="40dp"
+    android:layout_marginRight="5dp"
+    android:layout_margin="20dp"
     >
 
     <TextView

@@ -10,40 +10,40 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.schoolapp.R;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AnnouncementsAdapter extends RecyclerView.Adapter<AnnouncementsAdapter.ViewHolder> {
 
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> descriptions = new ArrayList<>();
+    private Context mContext;
 
 
-    public AnnouncementsAdapter(ArrayList<String> titles, ArrayList<String> descriptions){
+    public AnnouncementsAdapter(Context context, ArrayList<String> titles, ArrayList<String> descriptions){
         this.titles=titles;
         this.descriptions=descriptions;
+        this.mContext= context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_announcements,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_announcements, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        holder.title.setText(titles.get(position));
+        holder.description.setText(descriptions.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return titles.size();
     }
 
     public class  ViewHolder extends RecyclerView.ViewHolder {

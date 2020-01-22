@@ -32,7 +32,7 @@ public class AnnouncementsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-
+        //return inflater.inflate(R.layout.layout_announcements, container, false);
         View rootView = inflater.inflate(R.layout.fragment_announcements,
                 container, false);
 
@@ -44,9 +44,10 @@ public class AnnouncementsFragment extends Fragment {
         titles.add("title2");
         descriptions.add("desc2");
 
-        RecyclerView cardview =rootView.findViewById(R.id.pm);
-        AnnouncementsAdapter adapter = new AnnouncementsAdapter(titles, descriptions);
-        cardview.setAdapter(adapter);
+        RecyclerView recyclerView =rootView.findViewById(R.id.pm);
+        AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), titles, descriptions);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
     }

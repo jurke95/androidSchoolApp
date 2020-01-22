@@ -40,10 +40,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         //FrameLayout frame = new FrameLayout(this);
-        Fragment newFragment = new AnnouncementsFragment();
+        /*Fragment newFragment = new AnnouncementsFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.add();
+        fragmentTransaction.add(R.id.mainContent, newFragment).commit();*/
+
+        /*FragmentTransaction transaction = this.getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.mainContent, AnnouncementsFragment.newInstance());
+        transaction.commit();*/
 
 
 
