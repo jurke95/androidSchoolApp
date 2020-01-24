@@ -9,7 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Response;
 import com.example.schoolapp.R;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +47,15 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
        holder.keyView.setText(key+":");
        holder.valueView.setText(value);
     }
+
+    public void updateDataset(HashMap<String, String> newmap) {
+        subjData.clear();
+        Set<Map.Entry<String, String>> entrySet = newmap.entrySet();
+        subjData.addAll(entrySet);
+        this.notifyDataSetChanged();
+    }
+
+
 
     @Override
     public int getItemCount() {
