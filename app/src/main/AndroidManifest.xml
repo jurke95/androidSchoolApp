@@ -34,6 +34,9 @@
         <activity android:name=".activities.SettingsActivity">
         </activity>
 
+        <activity android:name=".activities.DatabaseHelper">
+        </activity>
+
     </application>
 
 </manifest>

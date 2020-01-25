@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,12 +26,20 @@ import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private DatabaseHelper schoolDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        schoolDatabase = new DatabaseHelper(this);
+        schoolDatabase.getWritableDatabase();
 
+        if(schoolDatabase.doesDatabaseExist(this,"schooldata.db")){
+            System.out.println("Database is successfully created");
+        }else{
+            System.out.println("Database is not created");
+        }
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
