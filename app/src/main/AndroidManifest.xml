@@ -36,6 +36,11 @@
 
         <activity android:name=".activities.DatabaseHelper">
         </activity>
+        <provider android:name="com.example.schoolapp.activities.SchoolProvider"
+            android:authorities="com.example.schoolapp"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
 
     </application>
 
