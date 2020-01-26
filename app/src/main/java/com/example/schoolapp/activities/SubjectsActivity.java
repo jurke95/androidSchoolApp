@@ -1,6 +1,9 @@
 package com.example.schoolapp.activities;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -37,16 +40,23 @@ public class SubjectsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subjects);
-
+        insertSubjects();
         recyclerView = (RecyclerView) findViewById(R.id.subjects_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         dataSubj= new HashMap<String, String>();
         mAdapter = new SubjectsAdapter(this,dataSubj);
         recyclerView.setAdapter(mAdapter);
-        System.out.println("Stigaoooo");
+        loadSubjects();
 
-        String URL = "http://192.168.0.13:5000/api/getMark";
+
+
+    }
+
+    public void insertSubjects(){
+
+
+        String URL = "http://192.168.0.21:5000/api/getMark";
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -61,37 +71,23 @@ public class SubjectsActivity extends AppCompatActivity {
                         System.out.println("RESPONSE");
                         Log.e("Rest Response", response.toString());
                         System.out.println(response);
-                        try {
+                        ContentValues values = new ContentValues();
+                        values.put("PERSON_ID",1);
+                        values.put("CLASS_ID",1);
+                        values.put("MARKS",response.toString());
+                        getContentResolver().insert(SchoolProvider.CONTENT_URI_CLASS_PERSON,values);
 
-                            JSONObject jObject = new JSONObject(response.toString());
-                            Iterator<?> keys = jObject.keys();
-
-                            while( keys.hasNext() ){
-                                String key = (String)keys.next();
-                                String value = jObject.getString(key);
-                                dataSubj.put(key, value);
-
-                            }
-
-                            mAdapter.updateDataset(dataSubj);
-
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                     }
-                    },
-                    new Response.ErrorListener(){
+                },
+                new Response.ErrorListener(){
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println("ERROR");
-                            Log.e("Rest Response", error.toString());
-                        }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("ERROR");
+                        Log.e("Rest Response", error.toString());
                     }
-                    );
+                }
+        );
 
         objectRequest.setRetryPolicy(new RetryPolicy() {
             @Override
@@ -110,6 +106,35 @@ public class SubjectsActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(objectRequest);
+
+
+
+
+    }
+
+    public void loadSubjects() {
+     String res;
+     Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_CLASS_PERSON + "/" + 1);
+     Cursor cursor = getContentResolver().query(uri,null,"1",null,null);
+        if( cursor != null && cursor.moveToFirst() ){
+             res = cursor.getString(cursor.getColumnIndex("MARKS"));
+            cursor.close();
+            try {
+
+                JSONObject jObject = new JSONObject(res.toString());
+                Iterator<?> keys = jObject.keys();
+
+                while( keys.hasNext() ){
+                    String key = (String)keys.next();
+                    String value = jObject.getString(key);
+                    dataSubj.put(key, value);
+
+                }
+                mAdapter.updateDataset(dataSubj);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
 
 
