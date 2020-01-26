@@ -4,12 +4,13 @@
     android:id="@+id/announcement_parent"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="@color/colorPrimary"
+
     android:layout_marginBottom="40dp"
     android:layout_marginRight="5dp"
     android:layout_margin="20dp"
+    android:background="@drawable/layout_bg"
     >
-
+    //android:background="@color/colorPrimary"
     <TextView
         android:id="@+id/announcement_title"
         android:layout_width="match_parent"
@@ -21,16 +22,19 @@
 
     <TextView
         android:id="@+id/announcement_description"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_width="355dp"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
         android:background="@color/colorWhite"
-        android:text="You won't have first class because the profesor is sick."
-        />
+        android:text="You won't have first class because the profesor is sick." />
 
     <Button
         android:layout_width="wrap_content"
