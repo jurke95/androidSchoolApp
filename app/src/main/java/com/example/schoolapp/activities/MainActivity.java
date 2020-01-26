@@ -70,6 +70,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -86,8 +117,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(menuItem.getItemId()){
 
             case R.id.nav_class:
-                Intent c = new Intent(this,StudentsActivity.class);
-                startActivity(c);
+                Intent intentStudents = new Intent(MainActivity.this,StudentsActivity.class);
+                //intentStudents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentStudents);
+                finish();
                 break;
             case R.id.nav_subjects:
                 Intent s = new Intent(this, SubjectsActivity.class);
