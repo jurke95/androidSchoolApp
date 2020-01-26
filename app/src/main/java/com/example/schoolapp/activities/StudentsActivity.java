@@ -1,8 +1,10 @@
 package com.example.schoolapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.adapters.RecyclerViewAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -59,8 +62,10 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
 
 
         GetStudentsAsync studentss = new GetStudentsAsync();
+
         try {
-            String result = studentss.execute("http://192.168.1.8:5000/Student/GetStudentsFromMyClass").get();
+            String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
+            String result = studentss.execute(serverIpAddress + "Student/GetStudentsFromMyClass").get();
 
             JSONArray jsonArray = new JSONArray(result);
 
@@ -93,14 +98,20 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
             String result;
             String inputLine;
 
+            SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(StudentsActivity.this);
+            String name = getPreferences.getString("token",null);
+
             try {
                 //Create a URL object holding our url
                 URL myUrl = new URL(stringUrl);
                 //Create a connection
                 HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
 
+                JSONObject tokenDetail = new JSONObject(name);
+                String token = tokenDetail.getString("token");
+
                 //JWT
-                connection.addRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkcmFnYW5AZ21haWwuY29tIiwianRpIjoiNTA5ZDFhZWQtNDI0OC00ZjMxLThkYmYtNWM0ZmNkNjcyNDgzIiwiZW1haWwiOiJkcmFnYW5AZ21haWwuY29tIiwiaWQiOiI1NWVmMDc1Yi0xOWFhLTRmMDEtYTdhMS1jOWI3MWIzMzc5OTIiLCJuYmYiOjE1ODAwNzE5NTcsImV4cCI6MTU4MDA3OTE1NywiaWF0IjoxNTgwMDcxOTU3fQ.ZB4TE1ajzKQb6nf7pDc5OihGh0i0evWqhWvm2DEQUbk");
+                connection.addRequestProperty("Authorization", "Bearer " + token);
 
                 //Set methods and timeouts
                 connection.setRequestMethod(REQUEST_METHOD);
@@ -130,7 +141,7 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
 
 
             }
-            catch(IOException e){
+            catch(Exception e){
                 e.printStackTrace();
                 result = null;
             }

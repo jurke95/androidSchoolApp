@@ -10,10 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.adapters.AnnouncementsAdapter;
 import com.example.schoolapp.sync.HttpGetRequest;
-
+import com.example.schoolapp.Config.MyApplication;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -42,7 +43,9 @@ public class AnnouncementsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        String myUrl = "http://192.168.0.15:5000/api/GetAnnouncementFromMyClass";
+        String serverIpAddress = MyApplication.getServerIpAddress();
+
+        String myUrl = serverIpAddress + "api/GetAnnouncementFromMyClass";
         String result="";
         SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String name = getPreferences.getString("token",null);

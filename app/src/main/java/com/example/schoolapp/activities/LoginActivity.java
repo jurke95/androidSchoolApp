@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.sync.HttpGetRequest;
 import com.example.schoolapp.sync.HttpPostRequest;
@@ -38,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         HttpPostRequest task = new HttpPostRequest(postData);
         String token= "";
         try {
-            token = task.execute("http://192.168.0.15:5000/api/login").get();
+            String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
+            token = task.execute(serverIpAddress + "api/login").get();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,5 +52,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }
