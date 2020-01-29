@@ -31,7 +31,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         schoolDatabase = new DatabaseHelper(this);
-        schoolDatabase.getWritableDatabase();
+        boolean dbExists = schoolDatabase.doesDatabaseExist(this, "schooldata.db");
+        if(dbExists)
+        {
+            schoolDatabase.onUpgrade(schoolDatabase.getWritableDatabase(),1,1);
+        }
 
         String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
         new InitTask().execute(serverIpAddress);
@@ -43,11 +47,17 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+            SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+            String tokenPreferences = getPreferences.getString("token",null);
 
-            String result = initStudents(params[0]);
+            String result = initStudents(params[0], tokenPreferences);
             if(result == "UserLogin")
             {
-                result = initAnnouncements(params[0]);
+                result = initAnnouncements(params[0], tokenPreferences);
+            }
+            if(result == "UserLogin")
+            {
+                result = initSubjects(params[0], tokenPreferences);
             }
 
 
@@ -75,14 +85,11 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     //inicijalizacija studenata
-    public String initStudents(String serverIpAddress)
+    public String initStudents(String serverIpAddress, String tokenPreferences)
     {
-        SystemClock.sleep(2000);
+        //SystemClock.sleep(2000);
         String result;
         String inputLine;
-
-        SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String tokenPreferences = getPreferences.getString("token",null);
 
         if(tokenPreferences != "" && tokenPreferences != null)
         {
@@ -137,15 +144,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                     values.put("PHONENUMBER",userProfile.getString("phoneNumber"));
                     values.put("IMAGEURL",userProfile.getString("imageUrl"));
                     getContentResolver().insert(SchoolProvider.CONTENT_URI_PERSON,values);
-
-
-
                 }
 
             }
             catch(Exception e){
                 e.printStackTrace();
-                result = null;
+                return "UserNotLogin";
             }
             return "UserLogin";
         }
@@ -154,9 +158,117 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     //inicijalizacija obavestenja
-    public String initAnnouncements(String serverIpAddress)
+    public String initAnnouncements(String serverIpAddress, String tokenPreferences)
     {
-        return "UserLogin";
+        String result;
+        String inputLine;
+
+        if(tokenPreferences != "" && tokenPreferences != null)
+        {
+            try
+            {
+                URL myUrl = new URL(serverIpAddress + "api/GetAnnouncementFromMyClass");
+                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
+
+                JSONObject tokenDetail = new JSONObject(tokenPreferences);
+                String token = tokenDetail.getString("token");
+                connection.addRequestProperty("Authorization", "Bearer " + token);
+
+                connection.setRequestMethod("GET");
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(15000);
+
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+                reader.close();
+                streamReader.close();
+                result = stringBuilder.toString();
+
+                JSONArray jsonArray = new JSONArray(result);
+
+
+                for(int i = 0; i<jsonArray.length(); i++)
+                {
+                    JSONObject announcements = jsonArray.getJSONObject(i);
+
+                    ContentValues values = new ContentValues();
+                    values.put("ID",i+1);
+                    values.put("TITLE",announcements.getString("title"));
+                    values.put("DESCRIPTION",announcements.getString("description"));
+                    getContentResolver().insert(SchoolProvider.CONTENT_URI_ANNOUNCEMENT,values);
+                }
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                return "UserNotLogin";
+            }
+            return "UserLogin";
+        }
+        return "UserNotLogin";
+    }
+
+    //inicijalizacija predmeta
+    public String initSubjects(String  serverIpAddress, String tokenPreferences)
+    {
+        String result;
+        String inputLine;
+
+        if(tokenPreferences != "" && tokenPreferences != null)
+        {
+
+            try
+            {
+                URL myUrl = new URL(serverIpAddress + "api/GetSubjectsForUser");
+                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
+
+                JSONObject tokenDetail = new JSONObject(tokenPreferences);
+                String token = tokenDetail.getString("token");
+                connection.addRequestProperty("Authorization", "Bearer " + token);
+
+                connection.setRequestMethod("GET");
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(15000);
+
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+                reader.close();
+                streamReader.close();
+                result = stringBuilder.toString();
+
+                JSONObject class_person = new JSONObject(result);
+                ContentValues values = new ContentValues();
+                values.put("PERSON_ID",class_person.getString("personId"));
+                values.put("CLASS_ID",class_person.getString("classId"));
+                values.put("MARKS",class_person.getString("grades"));
+                getContentResolver().insert(SchoolProvider.CONTENT_URI_CLASS_PERSON,values);
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                return "UserNotLogin";
+            }
+            return "UserLogin";
+        }
+        return "UserNotLogin";
     }
 
 }
+
+

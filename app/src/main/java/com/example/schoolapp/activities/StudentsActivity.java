@@ -20,25 +20,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.adapters.RecyclerViewAdapter;
 import com.google.android.material.navigation.NavigationView;
 
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
-public class StudentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class StudentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
 
     @Override
@@ -55,7 +44,7 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -63,38 +52,22 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
         ArrayList<String> imagesUrl = new ArrayList<>();
 
 
-        GetStudentsAsync studentss = new GetStudentsAsync();
-
         try {
-            String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
-            String result = studentss.execute(serverIpAddress + "Student/GetStudentsFromMyClass").get();
 
-            JSONArray jsonArray = new JSONArray(result);
+            Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_PERSON + "/all");
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
 
-            //for(int i = 0; i<jsonArray.length(); i++)
-            //{
-                //JSONObject userProfile = jsonArray.getJSONObject(i);
-                //students.add(userProfile.getString("firstName") + " " + userProfile.getString("lastName"));
-                //imagesUrl.add(userProfile.getString("imageUrl"));
-                Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_PERSON + "/all");
-                Cursor cursor = getContentResolver().query(uri,null,null,null,null);
-                if(cursor != null){
-                    try {
-                        System.out.println("COUNT=" + cursor.getCount());
-                        while (cursor.moveToNext()) {
+                    while (cursor.moveToNext()) {
 
-                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")));
-                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
-                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("PHONENUMBER")));
-                            students.add(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")) + cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
-                            imagesUrl.add(cursor.getString(cursor.getColumnIndexOrThrow("IMAGEURL")));
-                        }
+                        students.add(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")) + cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
+                        imagesUrl.add(cursor.getString(cursor.getColumnIndexOrThrow("IMAGEURL")));
                     }
-                    finally {
-                        cursor.close();
-                    }
+                } finally {
+                    cursor.close();
                 }
-            //}
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,77 +78,9 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    public class GetStudentsAsync extends AsyncTask<String, Void, String> {
-        public static final String REQUEST_METHOD = "GET";
-        public static final int READ_TIMEOUT = 15000;
-        public static final int CONNECTION_TIMEOUT = 15000;
-
-        @Override
-        protected String doInBackground(String... params) {
-            String stringUrl = params[0];
-            String result;
-            String inputLine;
-
-            SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(StudentsActivity.this);
-            String name = getPreferences.getString("token",null);
-
-            try {
-                //Create a URL object holding our url
-                URL myUrl = new URL(stringUrl);
-                //Create a connection
-                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
-
-                JSONObject tokenDetail = new JSONObject(name);
-                String token = tokenDetail.getString("token");
-
-                //JWT
-                connection.addRequestProperty("Authorization", "Bearer " + token);
-
-                //Set methods and timeouts
-                connection.setRequestMethod(REQUEST_METHOD);
-                connection.setReadTimeout(READ_TIMEOUT);
-                connection.setConnectTimeout(CONNECTION_TIMEOUT);
-
-                //Connect to our url
-                connection.connect();
-
-                //Create a new InputStreamReader
-                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
-                //Create a new buffered reader and String Builder
-                BufferedReader reader = new BufferedReader(streamReader);
-                StringBuilder stringBuilder = new StringBuilder();
-
-                //Check if the line we are reading is not null
-                while((inputLine = reader.readLine()) != null){
-                    stringBuilder.append(inputLine);
-                }
-                //Close our InputStream and Buffered reader
-                reader.close();
-                streamReader.close();
-                //Set our result equal to our stringBuilder
-                result = stringBuilder.toString();
-
-
-
-
-            }
-            catch(Exception e){
-                e.printStackTrace();
-                result = null;
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result){
-            super.onPostExecute(result);
-        }
-    }
-
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -203,20 +108,20 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
 
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        switch(menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
 
             case R.id.nav_class:
                 drawer.closeDrawer(GravityCompat.START);
@@ -239,13 +144,13 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu,menu);
+        inflater.inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.settings:
                 Intent s = new Intent(this, SettingsActivity.class);
                 startActivity(s);
@@ -254,9 +159,6 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 
 }
