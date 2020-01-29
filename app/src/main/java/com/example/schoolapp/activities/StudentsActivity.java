@@ -2,6 +2,8 @@ package com.example.schoolapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -69,14 +71,30 @@ public class StudentsActivity extends AppCompatActivity implements NavigationVie
 
             JSONArray jsonArray = new JSONArray(result);
 
-            for(int i = 0; i<jsonArray.length(); i++)
-            {
-                JSONObject userProfile = jsonArray.getJSONObject(i);
-                students.add(userProfile.getString("firstName") + " " + userProfile.getString("lastName"));
-                imagesUrl.add(userProfile.getString("imageUrl"));
-            }
+            //for(int i = 0; i<jsonArray.length(); i++)
+            //{
+                //JSONObject userProfile = jsonArray.getJSONObject(i);
+                //students.add(userProfile.getString("firstName") + " " + userProfile.getString("lastName"));
+                //imagesUrl.add(userProfile.getString("imageUrl"));
+                Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_PERSON + "/all");
+                Cursor cursor = getContentResolver().query(uri,null,null,null,null);
+                if(cursor != null){
+                    try {
+                        System.out.println("COUNT=" + cursor.getCount());
+                        while (cursor.moveToNext()) {
 
-
+                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")));
+                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
+                            System.out.println(cursor.getString(cursor.getColumnIndexOrThrow("PHONENUMBER")));
+                            students.add(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")) + cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
+                            imagesUrl.add(cursor.getString(cursor.getColumnIndexOrThrow("IMAGEURL")));
+                        }
+                    }
+                    finally {
+                        cursor.close();
+                    }
+                }
+            //}
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,9 +20,13 @@ public class SchoolProvider extends ContentProvider {
     private SQLiteDatabase schoolDatabase;
     public static final String AUTHORITY = "com.example.schoolapp";
     public static final Uri CONTENT_URI_CLASS_PERSON = Uri.parse("content://" + AUTHORITY + "/" + "class_person");
+    public static final Uri CONTENT_URI_PERSON = Uri.parse("content://" + AUTHORITY + "/" + "person");
 
     private static final int CLASS_PERSON_PERSON_ID = 1;
     private static final int CLASS_PERSON = 2;
+    private static final int PERSON = 3;
+    private static final int PERSONS = 4;
+
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -30,6 +34,8 @@ public class SchoolProvider extends ContentProvider {
     {
         uriMatcher.addURI(AUTHORITY, "class_person/#", CLASS_PERSON_PERSON_ID);
         uriMatcher.addURI(AUTHORITY, "class_person", CLASS_PERSON);
+        uriMatcher.addURI(AUTHORITY, "person", PERSON);
+        uriMatcher.addURI(AUTHORITY, "person/all", PERSONS);
 
     }
 
@@ -55,6 +61,9 @@ public class SchoolProvider extends ContentProvider {
             case CLASS_PERSON_PERSON_ID:
                 cursor = schoolDatabase.query("TABLE_CLASS_PERSON",new String[] { "MARKS"}, "PERSON_ID = ?",new String[] {s},null,null,null);
                 break;
+            case PERSONS:
+                cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL"}, null, null,null,null,null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -71,6 +80,8 @@ public class SchoolProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/table_class_person";
             case CLASS_PERSON:
                 return "vnd.android.cursor.dir/table_class_person";
+            case PERSONS:
+                return "vnd.android.cursor.dir/table_person";
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);
         }
@@ -85,6 +96,10 @@ public class SchoolProvider extends ContentProvider {
             case CLASS_PERSON:
                 id = schoolDatabase.insert(	"TABLE_CLASS_PERSON", "", contentValues);
                 _uri = ContentUris.withAppendedId(CONTENT_URI_CLASS_PERSON, id);
+                break;
+            case PERSON:
+                id = schoolDatabase.insert(	"TABLE_PERSON", "", contentValues);
+                _uri = ContentUris.withAppendedId(CONTENT_URI_PERSON, id);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -101,7 +116,6 @@ public class SchoolProvider extends ContentProvider {
                 e.printStackTrace();
             }
         }
-
 
         return _uri;
     }

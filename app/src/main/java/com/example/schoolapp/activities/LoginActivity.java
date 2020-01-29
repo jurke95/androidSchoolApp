@@ -45,13 +45,23 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("token",token);
-        editor.apply();
+        if(token != "BadRequest")
+        {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("token",token);
+            editor.apply();
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+            Intent intent = new Intent(LoginActivity.this, SplashScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else
+        {
+            finish();
+            startActivity(getIntent());
+        }
+
+
     }
 }

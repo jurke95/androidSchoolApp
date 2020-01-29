@@ -1,5 +1,6 @@
 package com.example.schoolapp.sync;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
@@ -50,14 +51,18 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
             }
 
             int statusCode = connection.getResponseCode();
-            InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+            if(statusCode == 200)
+            {
+                InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+                response = convertInputStreamToString(inputStream);
+                return response;
+            }
 
-            response = convertInputStreamToString(inputStream);
         }catch(Exception ex){
-
+            ex.printStackTrace();
         }
 
-        return response;
+        return "BadRequest";
     }
 
     private String convertInputStreamToString(InputStream inputStream) {

@@ -28,19 +28,19 @@ import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    private DatabaseHelper schoolDatabase;
+    //private DatabaseHelper schoolDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        schoolDatabase = new DatabaseHelper(this);
+/*        schoolDatabase = new DatabaseHelper(this);
         schoolDatabase.getWritableDatabase();
 
         if(schoolDatabase.doesDatabaseExist(this,"schooldata.db")){
             System.out.println("Database is successfully created");
         }else{
             System.out.println("Database is not created");
-        }
+        }*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
