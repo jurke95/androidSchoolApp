@@ -20,13 +20,14 @@ import com.example.schoolapp.R;
 import com.example.schoolapp.activities.StudentsActivity;
 import com.example.schoolapp.activities.SubjectsActivity;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
+import com.example.schoolapp.fragments.SchoolFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     //private DatabaseHelper schoolDatabase;
 
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setupDrawerContent(navigationView);
+        selectDrawerItem(R.id.nav_announcements);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -96,12 +98,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    private void setupDrawerContent(NavigationView navigationView){
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        selectDrawerItem(menuItem.getItemId());
+                        return true;
+                    }
+                }
 
-        switch(menuItem.getItemId()){
+        );
+    }
 
-            case R.id.nav_class:
+    public void selectDrawerItem(int itemId){
+
+        Fragment fragment=null;
+        Class fragmentClass;
+        switch(itemId){
+            /*case R.id.nav_class:
                 Intent intentStudents = new Intent(MainActivity.this,StudentsActivity.class);
                 //intentStudents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intentStudents);
@@ -110,14 +125,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_subjects:
                 Intent s = new Intent(this, SubjectsActivity.class);
                 startActivity(s);
-                break;
+                break;*/
             case R.id.nav_announcements:
-                drawer.closeDrawer(GravityCompat.START);
+                fragmentClass = AnnouncementsFragment.class;
                 break;
+            case R.id.nav_school:
+                fragmentClass = SchoolFragment.class;
+                break;
+            default:
+                fragmentClass = AnnouncementsFragment.class;
         }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+        try{
+            fragment = (Fragment)fragmentClass.newInstance();
+        }catch(Exception e){
+
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        drawer.closeDrawers();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

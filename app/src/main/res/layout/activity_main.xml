@@ -27,11 +27,7 @@ tools:openDrawer="start">
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <fragment
-                android:id="@+id/fragment"
-                android:name="com.example.schoolapp.fragments.AnnouncementsFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+
         </FrameLayout>
 
    </LinearLayout>
