@@ -6,6 +6,9 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +40,10 @@ public class AnnouncementsFragment extends Fragment {
 
         ArrayList<String> listOfTitles = new ArrayList<>();
         ArrayList<String> listOfDescriptions = new ArrayList<>();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView textView = toolbar.findViewById(R.id.toolbarTextView);
+        textView.setText("Announcement");
 
         RecyclerView recyclerView =rootView.findViewById(R.id.pm);
         AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), listOfTitles, listOfDescriptions);

@@ -33,6 +33,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.students = students;
         this.imagesUrl = imagesUrl;
         this.mContext = context;
+
+
+
+
+
     }
 
     //ovaj metod je odgovoran za punjenje view-a
