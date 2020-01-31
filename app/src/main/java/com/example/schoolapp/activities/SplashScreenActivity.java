@@ -59,8 +59,10 @@ public class SplashScreenActivity extends AppCompatActivity {
             {
                 result = initSubjects(params[0], tokenPreferences);
             }
-
-
+            if(result == "UserLogin")
+            {
+                result=initSchool(params[0], tokenPreferences);
+            }
 
             return result;
         }
@@ -261,6 +263,55 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             catch(Exception e)
             {
+                e.printStackTrace();
+                return "UserNotLogin";
+            }
+            return "UserLogin";
+        }
+        return "UserNotLogin";
+    }
+
+    //inicijalizacija skole
+    public String initSchool(String  serverIpAddress, String tokenPreferences){
+
+        String result;
+        String inputLine;
+
+        if(tokenPreferences != "" && tokenPreferences != null){
+            try{
+                URL myUrl = new URL(serverIpAddress + "api/GetSchool");
+                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
+
+                JSONObject tokenDetail = new JSONObject(tokenPreferences);
+                String token = tokenDetail.getString("token");
+                connection.addRequestProperty("Authorization", "Bearer " + token);
+
+                connection.setRequestMethod("GET");
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(15000);
+
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+                reader.close();
+                streamReader.close();
+                result = stringBuilder.toString();
+
+                JSONObject school = new JSONObject(result);
+                ContentValues values = new ContentValues();
+                values.put("ID",1);
+                values.put("NAME",school.getString("name"));
+                values.put("DESCRIPTION",school.getString("description"));
+                values.put("LOCATION",school.getString("location"));
+                getContentResolver().insert(SchoolProvider.CONTENT_URI_ACADEMY, values);
+
+            }catch(Exception e){
                 e.printStackTrace();
                 return "UserNotLogin";
             }

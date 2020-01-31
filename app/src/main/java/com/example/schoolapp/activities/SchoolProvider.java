@@ -22,12 +22,14 @@ public class SchoolProvider extends ContentProvider {
     public static final Uri CONTENT_URI_CLASS_PERSON = Uri.parse("content://" + AUTHORITY + "/" + "class_person");
     public static final Uri CONTENT_URI_PERSON = Uri.parse("content://" + AUTHORITY + "/" + "person");
     public static final Uri CONTENT_URI_ANNOUNCEMENT = Uri.parse("content://" + AUTHORITY + "/" + "announcement");
+    public static final Uri CONTENT_URI_ACADEMY = Uri.parse("content://" + AUTHORITY + "/" + "academy");
 
     private static final int CLASS_PERSON_PERSON_ID = 1;
     private static final int CLASS_PERSON = 2;
     private static final int PERSON = 3;
     private static final int PERSONS = 4;
     private static final int ANNOUNCEMENT = 5;
+    private static final int ACADEMY = 6;
 
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -39,6 +41,7 @@ public class SchoolProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, "person", PERSON);
         uriMatcher.addURI(AUTHORITY, "person/all", PERSONS);
         uriMatcher.addURI(AUTHORITY, "announcement", ANNOUNCEMENT);
+        uriMatcher.addURI(AUTHORITY, "academy", ACADEMY);
 
     }
 
@@ -87,6 +90,8 @@ public class SchoolProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/table_person";
             case ANNOUNCEMENT:
                 return "vnd.android.cursor.dir/table_announcement";
+            case ACADEMY:
+                return "vnd.android.cursor.dir/table_academy";
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);
         }
@@ -109,6 +114,10 @@ public class SchoolProvider extends ContentProvider {
             case ANNOUNCEMENT:
                 id = schoolDatabase.insert(	"TABLE_ANNOUNCEMENT", "", contentValues);
                 _uri = ContentUris.withAppendedId(CONTENT_URI_ANNOUNCEMENT, id);
+                break;
+            case ACADEMY:
+                id= schoolDatabase.insert("TABLE_ACADEMY","", contentValues);
+                _uri = ContentUris.withAppendedId(CONTENT_URI_ACADEMY, id);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
