@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.schoolapp.R;
@@ -17,6 +19,10 @@ public class SchoolFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_school,
                 container, false);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView textView = toolbar.findViewById(R.id.toolbarTextView);
+        textView.setText("School");
 
         return rootView;
     }

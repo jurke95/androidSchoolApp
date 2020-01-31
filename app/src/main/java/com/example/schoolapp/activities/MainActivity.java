@@ -8,23 +8,18 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.schoolapp.R;
-import com.example.schoolapp.activities.StudentsActivity;
-import com.example.schoolapp.activities.SubjectsActivity;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
+import com.example.schoolapp.fragments.StudentsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,11 +40,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-        selectDrawerItem(R.id.nav_announcements);
+
+        if(getIntent().hasExtra("fragment"))
+        {
+            String itemId = getIntent().getStringExtra("fragment");
+            if(itemId == "1"){
+                selectDrawerItem(R.id.nav_announcements);
+            }
+            else if(itemId == "2"){
+                selectDrawerItem(R.id.nav_class);
+            }
+            else if(itemId == "3"){
+                selectDrawerItem(R.id.nav_subjects);
+            }
+            else{
+                selectDrawerItem(R.id.nav_announcements);
+            }
+        }
+        else
+        {
+            selectDrawerItem(R.id.nav_announcements);
+        }
+
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -128,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 break;*/
             case R.id.nav_announcements:
                 fragmentClass = AnnouncementsFragment.class;
+                break;
+            case R.id.nav_class:
+                fragmentClass = StudentsFragment.class;
                 break;
             case R.id.nav_school:
                 fragmentClass = SchoolFragment.class;
