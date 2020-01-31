@@ -11,14 +11,23 @@
     android:background="@drawable/layout_bg"
     >
     //android:background="@color/colorPrimary"
-    <TextView
-        android:id="@+id/announcement_title"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:background="@color/colorGray"
-        android:text="First class"
-        />
 
+    <TextView
+        android:id="@+id/announcement_titleAndPerson"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorGray"
+        android:text="First class" />
+
+
+    <TextView
+        android:id="@+id/announcement_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorGray"
+        android:text="Time"
+        android:gravity = "end|right"/>
 
     <TextView
         android:id="@+id/announcement_description"

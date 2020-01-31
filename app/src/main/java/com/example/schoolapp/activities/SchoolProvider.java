@@ -29,6 +29,7 @@ public class SchoolProvider extends ContentProvider {
     private static final int PERSON = 3;
     private static final int PERSONS = 4;
     private static final int ANNOUNCEMENT = 5;
+    private static final int ANNOUNCEMENTS = 7;
     private static final int ACADEMY = 6;
 
 
@@ -41,6 +42,7 @@ public class SchoolProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, "person", PERSON);
         uriMatcher.addURI(AUTHORITY, "person/all", PERSONS);
         uriMatcher.addURI(AUTHORITY, "announcement", ANNOUNCEMENT);
+        uriMatcher.addURI(AUTHORITY, "announcement/all", ANNOUNCEMENTS);
         uriMatcher.addURI(AUTHORITY, "academy", ACADEMY);
 
     }
@@ -70,6 +72,9 @@ public class SchoolProvider extends ContentProvider {
             case PERSONS:
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL"}, null, null,null,null,null);
                 break;
+            case ANNOUNCEMENTS:
+                cursor = schoolDatabase.query("TABLE_ANNOUNCEMENT", new String[] {"TITLE","DESCRIPTION","TIME","PERSON_ID"}, null, null,null,null,null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -88,7 +93,7 @@ public class SchoolProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/table_class_person";
             case PERSONS:
                 return "vnd.android.cursor.dir/table_person";
-            case ANNOUNCEMENT:
+            case ANNOUNCEMENTS:
                 return "vnd.android.cursor.dir/table_announcement";
             case ACADEMY:
                 return "vnd.android.cursor.dir/table_academy";

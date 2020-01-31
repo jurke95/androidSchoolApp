@@ -204,6 +204,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     values.put("ID",i+1);
                     values.put("TITLE",announcements.getString("title"));
                     values.put("DESCRIPTION",announcements.getString("description"));
+                    values.put("TIME",announcements.getString("time"));
+                    values.put("PERSON_ID",announcements.getString("createdBy"));
                     getContentResolver().insert(SchoolProvider.CONTENT_URI_ANNOUNCEMENT,values);
                 }
 

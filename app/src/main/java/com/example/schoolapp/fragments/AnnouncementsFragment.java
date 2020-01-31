@@ -1,6 +1,8 @@
 package com.example.schoolapp.fragments;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
+import com.example.schoolapp.activities.SchoolProvider;
 import com.example.schoolapp.adapters.AnnouncementsAdapter;
 import com.example.schoolapp.sync.HttpGetRequest;
 import com.example.schoolapp.Config.MyApplication;
@@ -38,44 +41,37 @@ public class AnnouncementsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_announcements,
                 container, false);
 
-        ArrayList<String> listOfTitles = new ArrayList<>();
+        ArrayList<String> listOfTitlesAndPersons = new ArrayList<>();
         ArrayList<String> listOfDescriptions = new ArrayList<>();
+        ArrayList<String> listOfTime = new ArrayList<>();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         TextView textView = toolbar.findViewById(R.id.toolbarTextView);
         textView.setText("Announcement");
 
+        try{
+            Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_ANNOUNCEMENT+"/all");
+            Cursor cursor = getActivity().getContentResolver().query(uri,null, null, null,null);
+            if(cursor!=null){
+                try{
+                    while(cursor.moveToNext()){
+                        listOfTitlesAndPersons.add(cursor.getString(cursor.getColumnIndexOrThrow("TITLE"))+" (by "+cursor.getString(cursor.getColumnIndexOrThrow("PERSON_ID"))+")");
+                        listOfDescriptions.add(cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")));
+                        listOfTime.add(cursor.getString(cursor.getColumnIndexOrThrow("TIME")));
+                    }
+                }finally {
+                    cursor.close();
+                }
+            }
+        }catch (Exception ex){
+
+        }
+
+
         RecyclerView recyclerView =rootView.findViewById(R.id.pm);
-        AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), listOfTitles, listOfDescriptions);
+        AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), listOfTitlesAndPersons, listOfDescriptions, listOfTime);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        String serverIpAddress = MyApplication.getServerIpAddress();
-
-        String myUrl = serverIpAddress + "api/GetAnnouncementFromMyClass";
-        String result="";
-        SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String name = getPreferences.getString("token",null);
-
-
-        try{
-            JSONObject tokenDetail = new JSONObject(name);
-            String token = tokenDetail.getString("token");
-
-            HttpGetRequest getRequest = new HttpGetRequest();
-            result=getRequest.execute(myUrl, token).get();
-            System.out.println(result);
-
-            JSONArray jsonArray = new JSONArray(result);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject announcementDetail = jsonArray.getJSONObject(i);
-                listOfTitles.add(announcementDetail.getString("title"));
-                listOfDescriptions.add(announcementDetail.getString("description"));
-            }
-        }
-        catch(Exception ex){
-            System.out.println("exception");
-        }
 
         return rootView;
     }
