@@ -8,9 +8,11 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.activities.SchoolProvider;
 import com.example.schoolapp.adapters.AnnouncementsAdapter;
+import com.example.schoolapp.dialog.AddDialog;
 import com.example.schoolapp.sync.HttpGetRequest;
 import com.example.schoolapp.Config.MyApplication;
 import org.json.JSONException;
@@ -67,12 +70,25 @@ public class AnnouncementsFragment extends Fragment {
 
         }
 
-
         RecyclerView recyclerView =rootView.findViewById(R.id.pm);
         AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), listOfTitlesAndPersons, listOfDescriptions, listOfTime);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        Button addButton = rootView.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dialog = new AddDialog();
+                dialog.show(getFragmentManager(),"My Dialog");
+                //openDialog(view);
+            }
+        });
+
         return rootView;
+    }
+
+    public void openDialog(View view){
+
     }
 }
