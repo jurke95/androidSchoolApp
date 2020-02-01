@@ -42,19 +42,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*        schoolDatabase = new DatabaseHelper(this);
-        schoolDatabase.getWritableDatabase();
-
-        if(schoolDatabase.doesDatabaseExist(this,"schooldata.db")){
-            System.out.println("Database is successfully created");
-        }else{
-            System.out.println("Database is not created");
-        }*/
-
-
-
-
-
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -99,14 +86,20 @@ public class MainActivity extends AppCompatActivity {
         if(getIntent().hasExtra("fragment"))
         {
             String itemId = getIntent().getStringExtra("fragment");
-            if(itemId == "1"){
+            if(itemId.equals("1")){
                 selectDrawerItem(R.id.nav_announcements);
             }
-            else if(itemId == "2"){
+            else if(itemId.equals("2")){
                 selectDrawerItem(R.id.nav_class);
             }
-            else if(itemId == "3"){
+            else if(itemId.equals("3")){
                 selectDrawerItem(R.id.nav_subjects);
+            }
+            else if(itemId.equals("4")){
+                selectDrawerItem(R.id.nav_schedule);
+            }
+            else if(itemId.equals("5")){
+                selectDrawerItem(R.id.nav_school);
             }
             else{
                 selectDrawerItem(R.id.nav_announcements);
@@ -185,16 +178,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment=null;
         Class fragmentClass;
         switch(itemId){
-            /*case R.id.nav_class:
-                Intent intentStudents = new Intent(MainActivity.this,StudentsActivity.class);
-                //intentStudents.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intentStudents);
-                finish();
-                break;
-            case R.id.nav_subjects:
-                Intent s = new Intent(this, SubjectsActivity.class);
-                startActivity(s);
-                break;*/
             case R.id.nav_announcements:
                 fragmentClass = AnnouncementsFragment.class;
                 break;

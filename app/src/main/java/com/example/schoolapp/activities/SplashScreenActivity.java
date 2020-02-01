@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
@@ -57,7 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             if(result == "UserLogin")
             {
-                result = initSubjects(params[0], tokenPreferences);
+                //result = initSubjects(params[0], tokenPreferences);
             }
             if(result == "UserLogin")
             {
@@ -71,19 +70,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         protected void onPostExecute(String result)
         {
             super.onPostExecute(result);
-            if(result == "UserLogin")
-            {
+            if(result == "UserLogin"){
                 startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                 finish();
             }
-            else
-            {
+            else{
                 startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
                 finish();
             }
-
         }
-
     }
 
     //inicijalizacija studenata
