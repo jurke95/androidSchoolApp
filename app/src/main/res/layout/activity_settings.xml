@@ -7,38 +7,24 @@
     android:orientation="vertical"
     tools:context=".activities.SettingsActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textSize="32dp"
-        android:gravity="center"
-        android:ems="10"
-        android:text="SETTINGS" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="4dp"/>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <!-- Your Current Card Layout Here -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/my_card_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="71dp"
-            android:layout_marginLeft="20dp"
-            android:text="Settings here..." />
+        android:id="@+id/fragment_container"
+        />
 
 
-    </LinearLayout>
+
+
 
 </LinearLayout>
 

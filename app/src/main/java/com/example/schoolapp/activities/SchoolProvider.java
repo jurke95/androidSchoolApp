@@ -62,7 +62,7 @@ public class SchoolProvider extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case CLASS_PERSON_PERSON_ID:
-                cursor = schoolDatabase.query("TABLE_CLASS_PERSON",new String[] { "MARKS"}, "PERSON_ID = ?",new String[] {s},null,null,null);
+                cursor = schoolDatabase.query("TABLE_CLASS_PERSON",new String[] { "MARKS"}, "ID=?", new String[] {"1"},null,null,null);
                 break;
             case PERSONS:
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL"}, null, null,null,null,null);

@@ -3,4 +3,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="hello_world">Hello from resource</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="sync_pref">Sync</string>
+    <string name="sync_pref_summary">
+        Synchronize data with School server
+    </string>
+
+    <string name="app_version">App version</string>
+    <string name="app_version_summary">
+        School app version 1.0
+    </string>
 </resources>
