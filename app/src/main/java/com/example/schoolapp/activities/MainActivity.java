@@ -7,12 +7,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.schoolapp.R;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
@@ -21,6 +29,11 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
@@ -37,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         }else{
             System.out.println("Database is not created");
         }*/
+
+
+
+
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,6 +64,37 @@ public class MainActivity extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+
+
+        SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String tokenPreferences = getPreferences.getString("person",null);
+        JSONObject personDetail = null;
+        String firstAndLastName ="";
+        String email = "";
+        String imageUrl = "";
+        try {
+            personDetail = new JSONObject(tokenPreferences);
+            firstAndLastName = personDetail.getString("firstAndLastName");
+            email = personDetail.getString("email");
+            imageUrl = personDetail.getString("imageUrl");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvfirstAndLastName = (TextView) headerView.findViewById(R.id.person_namee);
+        tvfirstAndLastName.setText(firstAndLastName);
+
+        TextView tvemail = (TextView) headerView.findViewById(R.id.person_email);
+        tvemail.setText(email);
+
+        CircleImageView ivimage = (CircleImageView) headerView.findViewById(R.id.person_image);
+        Glide.with(this)
+                .asBitmap() //govori glideu da hocemo da bude bitmap
+                .load(imageUrl)  //hocemo ovaj url
+                .into(ivimage);
+
 
         if(getIntent().hasExtra("fragment"))
         {
@@ -66,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         {
             selectDrawerItem(R.id.nav_announcements);
         }
+
 
 
 

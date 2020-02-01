@@ -55,7 +55,7 @@ public class AnnouncementsFragment extends Fragment {
             if(cursor!=null){
                 try{
                     while(cursor.moveToNext()){
-                        listOfTitlesAndPersons.add(cursor.getString(cursor.getColumnIndexOrThrow("TITLE"))+" (by "+cursor.getString(cursor.getColumnIndexOrThrow("PERSON_ID"))+")");
+                        listOfTitlesAndPersons.add(cursor.getString(cursor.getColumnIndexOrThrow("TITLE"))+" by "+cursor.getString(cursor.getColumnIndexOrThrow("PERSON_ID")));
                         listOfDescriptions.add(cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")));
                         listOfTime.add(cursor.getString(cursor.getColumnIndexOrThrow("TIME")));
                     }

@@ -8,13 +8,14 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:layout_height="176dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/person_image"
         android:layout_width="43dp"
         android:layout_height="53dp"
         android:src="@drawable/my_profile" />
 
     <TextView
-        android:id="@+id/person_name"
+        android:id="@+id/person_namee"
         android:layout_width="295dp"
         android:layout_height="wrap_content"
         android:text="Pera Peric" />

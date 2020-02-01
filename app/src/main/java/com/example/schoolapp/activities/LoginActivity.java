@@ -37,10 +37,16 @@ public class LoginActivity extends AppCompatActivity {
         postData.put("Email", emailView.getText().toString());
         postData.put("Password", passwordView.getText().toString());
         HttpPostRequest task = new HttpPostRequest(postData);
+        HttpGetRequest getRequest = new HttpGetRequest();
+
         String token= "";
+        String person="";
         try {
             String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
             token = task.execute(serverIpAddress + "api/login").get();
+            JSONObject tokenObject = new JSONObject(token);
+            String tokenDetail = tokenObject.getString("token");
+            person=getRequest.execute(serverIpAddress+"api/GetPerson", tokenDetail).get();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("token",token);
+            editor.putString("person",person);
             editor.apply();
 
             Intent intent = new Intent(LoginActivity.this, SplashScreenActivity.class);
