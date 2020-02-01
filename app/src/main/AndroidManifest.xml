@@ -25,7 +25,6 @@
         <activity android:name=".activities.MainActivity"></activity>
         <activity android:name=".activities.LoginActivity"></activity>
         <activity android:name=".activities.ClassesActivity"></activity>
-        <activity android:name=".activities.StudentsActivity"></activity>
         <activity android:name=".activities.UserProfileActivity"></activity>
         <activity android:name=".activities.SubjectsActivity"></activity>
         <activity android:name=".activities.SettingsActivity"></activity>
