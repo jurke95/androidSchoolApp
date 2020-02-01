@@ -80,6 +80,9 @@ public class SchoolProvider extends ContentProvider {
             case PERSON_ID:
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL", "ID"}, "ID = ?", new String[] {s},null,null,null);
                 break;
+            case ACADEMY:
+                cursor = schoolDatabase.query("TABLE_ACADEMY", new String[] {"NAME", "DESCRIPTION", "LOCATION"}, null,null, null, null,null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
