@@ -2,6 +2,8 @@ package com.example.schoolapp.activities;
 
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -39,31 +41,70 @@ public class UserProfileActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
-        if(getIntent().hasExtra("image_url") && getIntent().hasExtra("student_name")){
-            String imageUrl = getIntent().getStringExtra("image_url");
-            String studentName = getIntent().getStringExtra("student_name");
+        if (getIntent().hasExtra("student_id")) {
+            String student_id = getIntent().getStringExtra("student_id");
+            String studentName = "";
+            String studentPhone = "";
+            String studentImage = "";
+
+            try {
+
+                Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_PERSON + "/" + student_id);
+                Cursor cursor = getContentResolver().query(uri, null, student_id, null, null);
+                if (cursor != null) {
+                    try {
+
+                        while (cursor.moveToNext()) {
+
+                            studentName = (cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")) + " " + cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
+                            studentImage = (cursor.getString(cursor.getColumnIndexOrThrow("IMAGEURL")));
+                            studentPhone = (cursor.getString(cursor.getColumnIndexOrThrow("PHONENUMBER")));
+                        }
+                    } finally {
+                        cursor.close();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             TextView name = findViewById(R.id.student_name);
             name.setText(studentName);
 
+            TextView phoneNumber = findViewById(R.id.student_phone_number);
+            phoneNumber.setText(studentPhone);
+
             ImageView image = findViewById(R.id.image);
             Glide.with(this)
                     .asBitmap()
-                    .load(imageUrl)
+                    .load(studentImage)
                     .into(image);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+/*        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
+        }*/
+        Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+        intent.putExtra("fragment", "2");
+        startActivity(intent);
+        finish();
     }
 
-    private void setupDrawerContent(NavigationView navigationView){
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+        intent.putExtra("fragment", "2");
+        startActivity(intent);
+        finish();
+        return true;
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -76,11 +117,11 @@ public class UserProfileActivity extends AppCompatActivity {
         );
     }
 
-    public void selectDrawerItem(int itemId){
+    public void selectDrawerItem(int itemId) {
 
         Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
 
-        switch(itemId){
+        switch (itemId) {
             case R.id.nav_announcements:
                 intent.putExtra("fragment", "1");
                 break;
@@ -89,6 +130,12 @@ public class UserProfileActivity extends AppCompatActivity {
                 break;
             case R.id.nav_subjects:
                 intent.putExtra("fragment", "3");
+                break;
+            case R.id.nav_schedule:
+                intent.putExtra("fragment", "4");
+                break;
+            case R.id.nav_school:
+                intent.putExtra("fragment", "5");
                 break;
             default:
                 intent.putExtra("fragment", "1");

@@ -1,7 +1,10 @@
 package com.example.schoolapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.schoolapp.R;
+import com.example.schoolapp.activities.MainActivity;
+import com.example.schoolapp.activities.SchoolProvider;
 import com.example.schoolapp.activities.UserProfileActivity;
 
 import java.util.ArrayList;
@@ -27,16 +32,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<String> students = new ArrayList<>();
     private ArrayList<String> imagesUrl = new ArrayList<>();
+    private ArrayList<String> studentId = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> students, ArrayList<String> imagesUrl) {
-        this.students = students;
-        this.imagesUrl = imagesUrl;
+    public RecyclerViewAdapter(Context context) {
         this.mContext = context;
 
+        try {
 
+            Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_PERSON + "/all");
+            Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
 
+                    while (cursor.moveToNext()) {
 
+                        students.add(cursor.getString(cursor.getColumnIndexOrThrow("FIRSTNAME")) + " " +  cursor.getString(cursor.getColumnIndexOrThrow("LASTNAME")));
+                        imagesUrl.add(cursor.getString(cursor.getColumnIndexOrThrow("IMAGEURL")));
+                        studentId.add(cursor.getString(cursor.getColumnIndexOrThrow("ID")));
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -68,9 +89,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //Toast.makeText(mContext, students.get(position), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(mContext, UserProfileActivity.class);
-                intent.putExtra("image_url", imagesUrl.get(position));
-                intent.putExtra("student_name", students.get(position));
+                intent.putExtra("student_id", studentId.get(position));
                 mContext.startActivity(intent);
+                ((Activity)mContext).finish();
             }
         });
     }
