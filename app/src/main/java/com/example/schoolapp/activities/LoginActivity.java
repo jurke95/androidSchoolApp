@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
         postData.put("Email", emailView.getText().toString());
         postData.put("Password", passwordView.getText().toString());
-        HttpPostRequest task = new HttpPostRequest(postData);
+        HttpPostRequest task = new HttpPostRequest(postData,"");
         HttpGetRequest getRequest = new HttpGetRequest();
 
         String token= "";

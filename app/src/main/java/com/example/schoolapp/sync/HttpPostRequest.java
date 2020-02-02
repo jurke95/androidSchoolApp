@@ -18,10 +18,12 @@ import java.util.Map;
 public class HttpPostRequest extends AsyncTask<String, Void, String> {
 
     JSONObject postData;
+    String token;
 
-    public HttpPostRequest(Map<String, String> postData){
+    public HttpPostRequest(Map<String, String> postData, String token){
         if(postData!=null){
             this.postData=new JSONObject(postData);
+            this.token=token;
         }
     }
 
@@ -31,6 +33,7 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
         if(android.os.Debug.isDebuggerConnected())
             android.os.Debug.waitForDebugger();
         String stringUrl = params[0];
+
         String response="";
 
         try{
@@ -44,6 +47,7 @@ public class HttpPostRequest extends AsyncTask<String, Void, String> {
             connection.setRequestProperty("Content-Type", "application/json");
 
             connection.setRequestMethod("POST");
+            connection.setRequestProperty ("Authorization", "Bearer "+token);
             if (this.postData != null) {
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
                 writer.write(postData.toString());
