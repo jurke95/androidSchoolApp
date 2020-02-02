@@ -1,5 +1,6 @@
 package com.example.schoolapp.fragments;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +35,11 @@ import java.util.Iterator;
 
 public class AnnouncementsFragment extends Fragment {
 
+    ArrayList<String> listOfTitlesAndPersons = new ArrayList<>();
+    ArrayList<String> listOfDescriptions = new ArrayList<>();
+    ArrayList<String> listOfTime = new ArrayList<>();
+    View rootView;
+
     public static AnnouncementsFragment newInstance() {
 
         AnnouncementsFragment mpf = new AnnouncementsFragment();
@@ -41,16 +48,35 @@ public class AnnouncementsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_announcements,
+        rootView = inflater.inflate(R.layout.fragment_announcements,
                 container, false);
-
-        ArrayList<String> listOfTitlesAndPersons = new ArrayList<>();
-        ArrayList<String> listOfDescriptions = new ArrayList<>();
-        ArrayList<String> listOfTime = new ArrayList<>();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         TextView textView = toolbar.findViewById(R.id.toolbarTextView);
         textView.setText("Announcement");
+
+        Button addButton = rootView.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddDialog dialog = new AddDialog();
+                dialog.show(getFragmentManager(),"My Dialog");
+
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        getData();
+                    }
+                });
+            }
+        });
+
+        getData();
+
+        return rootView;
+    }
+
+    public void getData(){
 
         try{
             Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_ANNOUNCEMENT+"/all");
@@ -58,7 +84,7 @@ public class AnnouncementsFragment extends Fragment {
             if(cursor!=null){
                 try{
                     while(cursor.moveToNext()){
-                        listOfTitlesAndPersons.add(cursor.getString(cursor.getColumnIndexOrThrow("TITLE"))+" by "+cursor.getString(cursor.getColumnIndexOrThrow("PERSON_ID")));
+                        listOfTitlesAndPersons.add(cursor.getString(cursor.getColumnIndexOrThrow("TITLE"))+" (by "+cursor.getString(cursor.getColumnIndexOrThrow("PERSON_ID"))+")");
                         listOfDescriptions.add(cursor.getString(cursor.getColumnIndexOrThrow("DESCRIPTION")));
                         listOfTime.add(cursor.getString(cursor.getColumnIndexOrThrow("TIME")));
                     }
@@ -74,21 +100,6 @@ public class AnnouncementsFragment extends Fragment {
         AnnouncementsAdapter adapter = new AnnouncementsAdapter(getActivity(), listOfTitlesAndPersons, listOfDescriptions, listOfTime);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        Button addButton = rootView.findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialog = new AddDialog();
-                dialog.show(getFragmentManager(),"My Dialog");
-                //openDialog(view);
-            }
-        });
-
-        return rootView;
-    }
-
-    public void openDialog(View view){
 
     }
 }
