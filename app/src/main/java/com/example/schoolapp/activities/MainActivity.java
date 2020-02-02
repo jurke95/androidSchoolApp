@@ -25,6 +25,7 @@ import com.example.schoolapp.R;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
 import com.example.schoolapp.fragments.StudentsFragment;
+import com.example.schoolapp.fragments.SubjectsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
@@ -186,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_school:
                 fragmentClass = SchoolFragment.class;
+                break;
+            case R.id.nav_subjects:
+                fragmentClass = SubjectsFragment.class;
                 break;
             default:
                 fragmentClass = AnnouncementsFragment.class;
