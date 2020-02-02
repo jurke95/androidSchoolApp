@@ -78,6 +78,10 @@ public class AnnouncementsFragment extends Fragment {
 
     public void getData(){
 
+        listOfTitlesAndPersons = new ArrayList<>();
+        listOfDescriptions = new ArrayList<>();
+        listOfTime = new ArrayList<>();
+
         try{
             Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_ANNOUNCEMENT+"/all");
             Cursor cursor = getActivity().getContentResolver().query(uri,null, null, null,null);
