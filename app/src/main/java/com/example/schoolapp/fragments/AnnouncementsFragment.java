@@ -60,6 +60,7 @@ public class AnnouncementsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AddDialog dialog = new AddDialog();
+                dialog.setCancelable(false);
                 dialog.show(getFragmentManager(),"My Dialog");
 
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

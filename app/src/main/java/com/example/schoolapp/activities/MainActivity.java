@@ -7,18 +7,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.schoolapp.R;
@@ -26,6 +26,8 @@ import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
 import com.example.schoolapp.fragments.StudentsFragment;
 import com.example.schoolapp.fragments.SubjectsFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.fragment.app.Fragment;
@@ -38,7 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
-    //private DatabaseHelper schoolDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = StudentsFragment.class;
                 break;
             case R.id.nav_school:
-                fragmentClass = SchoolFragment.class;
+                if(isServicesOK()){
+                    fragmentClass = SchoolFragment.class;
+                }
+                else{
+                    fragmentClass = AnnouncementsFragment.class;
+                }
                 break;
             case R.id.nav_subjects:
                 fragmentClass = SubjectsFragment.class;
@@ -225,6 +232,28 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public boolean isServicesOK(){
+        Log.d("MainActivity", "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d("MainActivity", "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            Log.d("MainActivity","isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, 9003);
+            dialog.show();
+        }else{
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
 }

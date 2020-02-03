@@ -66,6 +66,7 @@ public class SchoolProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
 
         Cursor cursor;
+        String Column="TIME";
 
         switch (uriMatcher.match(uri)) {
             case CLASS_PERSON_PERSON_ID:
@@ -75,7 +76,7 @@ public class SchoolProvider extends ContentProvider {
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL", "ID"}, null, null,null,null,null);
                 break;
             case ANNOUNCEMENTS:
-                cursor = schoolDatabase.query("TABLE_ANNOUNCEMENT", new String[] {"TITLE","DESCRIPTION","TIME","PERSON_ID"}, null, null,null,null,null);
+                cursor = schoolDatabase.query("TABLE_ANNOUNCEMENT", new String[] {"TITLE","DESCRIPTION","TIME","PERSON_ID"}, null, null,null,null, Column+" DESC");
                 break;
             case PERSON_ID:
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL", "ID"}, "ID = ?", new String[] {s},null,null,null);

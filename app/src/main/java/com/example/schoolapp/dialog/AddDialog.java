@@ -54,6 +54,7 @@ public class AddDialog extends DialogFragment {
 
 
         builder.setView(view)
+                .setCancelable(false)
                 // Add action buttons
                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
