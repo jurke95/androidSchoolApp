@@ -88,7 +88,7 @@ public class ScheduleFragment extends Fragment {
         // add infos for the service which file to download and where to store
         intent.putExtra(DownloadService.FILENAME, "Schedule.html");
         intent.putExtra(DownloadService.URL,
-                "https://drive.google.com/uc?export=download&id=1XLp16Zav6hWbSd0eK0YA05STjT6eF7u4");
+                "https://drive.google.com/uc?export=download&id=1NNDPtMaw6mWKuPX8xS1QmAUXmMtfoUD_");
         getActivity().startService(intent);
         textView.setText("Service started");
     }
