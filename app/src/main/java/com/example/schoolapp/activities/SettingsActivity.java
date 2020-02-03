@@ -13,6 +13,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,6 +23,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,60 +84,36 @@ public  class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.preferences);
-            bindSummaryValue(findPreference("key_sleep_timer"));
+
         }
 
 
             @Override
             public boolean onPreferenceTreeClick(PreferenceScreen screen, Preference preference) {
-                System.out.println("USAO UUU DETECT");
+
                 String key = preference.getKey();
                 System.out.println(key);
                 if(key.equals("key_pref_sync")){
                     schoolDatabase.onUpgrade(schoolDatabase.getWritableDatabase(),1,1);
                     new SyncTask().execute(serverIpAddress);
+                } else if(key.equals("key_enable_notifications")){
+
+                    SwitchPreference switchPreference = (SwitchPreference) preference;
+                    boolean enabled = switchPreference.isChecked();
+                    String stringEnabled = Boolean.toString(enabled);
+                    System.out.println("Da li je enableovano?");
+                    SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+                    String tokenPreferences = getPreferences.getString("token",null);
+                    System.out.println(stringEnabled);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getAppContext());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("notifications",stringEnabled);
+                    editor.apply();
+
                 }
                 return false;
             }
-
-
-
-
     }
-
-    private  static void bindSummaryValue(Preference preference){
-
-        preference.setOnPreferenceChangeListener(listenerChange);
-        listenerChange.onPreferenceChange(preference, PreferenceManager.getDefaultSharedPreferences(preference.getContext())
-                .getString(preference.getKey(),""));
-
-    }
-
-    private static Preference.OnPreferenceChangeListener listenerChange = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            System.out.println("USAO UUU CHANGEE");
-            String stringValue = newValue.toString();
-
-
-            if(preference instanceof ListPreference){
-             ListPreference listPreference = (ListPreference) preference;
-             int index = listPreference.findIndexOfValue(stringValue);
-             preference.setSummary(index>=0
-             ? listPreference.getEntries()[index]
-             : null);
-            }else if(preference instanceof Preference){
-
-                new SyncTask().execute(serverIpAddress);
-
-
-
-            }
-            return false;
-        }
-    };
-
-
 
     private static class SyncTask extends AsyncTask<String, Void, String> {
 
@@ -164,7 +145,6 @@ public  class SettingsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
             Toast.makeText(getAppContext(),"Sync has finished.",Toast.LENGTH_SHORT).show();
         }
     }
@@ -352,12 +332,4 @@ public  class SettingsActivity extends AppCompatActivity {
         }
         return "UserNotLogin";
     }
-
-
-
-
-
-
-
-
 }

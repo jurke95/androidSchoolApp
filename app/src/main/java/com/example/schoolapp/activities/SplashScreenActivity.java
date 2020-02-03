@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,10 +18,16 @@ import android.preference.PreferenceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -37,6 +46,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
+        getDeviceId();
         new InitTask().execute(serverIpAddress);
     }
 
@@ -278,27 +288,39 @@ public class SplashScreenActivity extends AppCompatActivity {
             try{
                 URL myUrl = new URL(serverIpAddress + "api/GetSchool");
                 HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
-
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
                 JSONObject tokenDetail = new JSONObject(tokenPreferences);
                 String token = tokenDetail.getString("token");
+                SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+                String deviceid = getPreferences.getString("device",null);
                 connection.addRequestProperty("Authorization", "Bearer " + token);
-
-                connection.setRequestMethod("GET");
-                connection.setReadTimeout(15000);
+                connection.setRequestProperty("Content-Type", "application/json");
+                JSONObject postData = new JSONObject();
+                System.out.println("Ovo je device id:");
+                System.out.println(deviceid);
+                postData.put("DeviceToken",deviceid);
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(postData.toString());
+                writer.flush();
                 connection.setConnectTimeout(15000);
 
                 connection.connect();
 
-                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
-                BufferedReader reader = new BufferedReader(streamReader);
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while((inputLine = reader.readLine()) != null){
-                    stringBuilder.append(inputLine);
+                InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                try {
+                    while((line = bufferedReader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                reader.close();
-                streamReader.close();
-                result = stringBuilder.toString();
+
+                result = sb.toString();
 
                 JSONObject school = new JSONObject(result);
                 ContentValues values = new ContentValues();
@@ -315,6 +337,20 @@ public class SplashScreenActivity extends AppCompatActivity {
             return "UserLogin";
         }
         return "UserNotLogin";
+    }
+    public void getDeviceId(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SplashScreenActivity.this, new OnSuccessListener<InstanceIdResult>(){
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String deviceToken = instanceIdResult.getToken();
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("device",deviceToken);
+                editor.putString("notifications","true");
+                editor.apply();
+
+            }
+        });
     }
 
 }

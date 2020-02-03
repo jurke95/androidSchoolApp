@@ -7,12 +7,10 @@
         android:title="@string/sync_pref"
         android:summary="@string/sync_pref_summary"/>
 
-    <ListPreference
-        android:key="key_sleep_timer"
-        android:title="Sleep timer"
-        android:summary="Turn off screen after some time"
-        android:entries="@array/timerList"
-        android:entryValues="@array/timerListValues"/>
+    <SwitchPreference
+        android:key="key_enable_notifications"
+        android:title="Notifications"
+        android:defaultValue="true"/>
 
     <Preference
         android:key="key_app_version"

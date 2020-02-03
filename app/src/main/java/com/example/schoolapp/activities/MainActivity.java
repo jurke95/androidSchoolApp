@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String tokenPreferences = getPreferences.getString("person",null);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         JSONObject personDetail = null;
         String firstAndLastName ="";
         String email = "";
