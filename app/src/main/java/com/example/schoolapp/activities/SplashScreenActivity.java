@@ -401,9 +401,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                
-                reader.close();
-                streamReader.close();
+
+                inputStream.close();
+                bufferedReader.close();
                 result = sb.toString();
 
                 JSONObject school = new JSONObject(result);
