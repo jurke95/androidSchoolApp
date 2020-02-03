@@ -7,6 +7,9 @@ import com.example.schoolapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.example.schoolapp.fragments.ProfessorStudentsFragment;
+import com.example.schoolapp.fragments.SubjectsFragment;
+import com.example.schoolapp.sync.HttpGetRequest;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -33,6 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static int SPLASH_TIME_OUT = 3000;
     private DatabaseHelper schoolDatabase;
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,20 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
         getDeviceId();
+        //get role
+        SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+        HttpGetRequest getRequest = new HttpGetRequest();
+        String tokenPreferences = getPreferences.getString("token",null);
+        JSONObject tokenDetail = null;
+        try {
+            tokenDetail = new JSONObject(tokenPreferences);
+            String token = tokenDetail.getString("token");
+            role=getRequest.execute(serverIpAddress+"api/GetRole", token).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //
+
         new InitTask().execute(serverIpAddress);
     }
 
@@ -66,7 +84,13 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             if(result == "UserLogin")
             {
-                result = initSubjects(params[0], tokenPreferences);
+                String s = "\"Teacher\"";
+                if(role.equals(s)){
+                    result= initProfessorSubject(params[0], tokenPreferences);
+                }
+                else{
+                    result = initSubjects(params[0], tokenPreferences);
+                }
             }
             if(result == "UserLogin")
             {
@@ -104,6 +128,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             try {
                 //Create a URL object holding our url
                 URL myUrl = new URL(serverIpAddress + "Student/GetStudentsFromMyClass");
+                
                 //Create a connection
                 HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
 
@@ -278,6 +303,62 @@ public class SplashScreenActivity extends AppCompatActivity {
         return "UserNotLogin";
     }
 
+    //inicijalizacija predmeta kad je ulogovan profesor
+    public String initProfessorSubject(String  serverIpAddress, String tokenPreferences){
+        String result;
+        String inputLine;
+
+        if(tokenPreferences != "" && tokenPreferences != null){
+            try{
+                URL myUrl = new URL(serverIpAddress + "api/GetSubjectsForAllUsers");
+                HttpURLConnection connection =(HttpURLConnection) myUrl.openConnection();
+
+                JSONObject tokenDetail = new JSONObject(tokenPreferences);
+                String token = tokenDetail.getString("token");
+                connection.addRequestProperty("Authorization", "Bearer " + token);
+
+                connection.setRequestMethod("GET");
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(15000);
+
+                connection.connect();
+
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while((inputLine = reader.readLine()) != null){
+                    stringBuilder.append(inputLine);
+                }
+                reader.close();
+                streamReader.close();
+                result = stringBuilder.toString();
+
+                JSONArray jsonArray = new JSONArray(result);
+
+                for(int i = 0; i<jsonArray.length(); i++) {
+                    JSONObject marks = jsonArray.getJSONObject(i);
+
+                    ContentValues values = new ContentValues();
+                    values.put("ID",i+1);
+                    values.put("PERSON_ID",marks.getString("personId"));
+                    values.put("CLASS_ID",marks.getString("classId"));
+                    values.put("MARKS",marks.getString("grades"));
+                    getContentResolver().insert(SchoolProvider.CONTENT_URI_CLASS_PERSON, values);
+
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                return "UserNotLogin";
+            }
+            return "UserLogin";
+        }
+        return "UserNotLogin";
+
+
+    }
+
     //inicijalizacija skole
     public String initSchool(String  serverIpAddress, String tokenPreferences){
 
@@ -320,6 +401,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                
+                reader.close();
+                streamReader.close();
                 result = sb.toString();
 
                 JSONObject school = new JSONObject(result);

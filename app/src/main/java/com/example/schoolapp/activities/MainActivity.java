@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Dialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,16 +18,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
+import com.example.schoolapp.fragments.ProfessorStudentsFragment;
+import com.example.schoolapp.fragments.ProfessorStudentsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
 import com.example.schoolapp.fragments.StudentsFragment;
 import com.example.schoolapp.fragments.SubjectsFragment;
 import com.google.android.gms.common.ConnectionResult;
+import com.example.schoolapp.sync.HttpGetRequest;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,6 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
 
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +66,34 @@ public class MainActivity extends AppCompatActivity {
 
 
         SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String tokenPreferences = getPreferences.getString("person",null);
+        String personPreferences = getPreferences.getString("person",null);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         JSONObject personDetail = null;
         String firstAndLastName ="";
         String email = "";
         String imageUrl = "";
         try {
-            personDetail = new JSONObject(tokenPreferences);
+            personDetail = new JSONObject(personPreferences);
             firstAndLastName = personDetail.getString("firstAndLastName");
             email = personDetail.getString("email");
             imageUrl = personDetail.getString("imageUrl");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //get role
+        HttpGetRequest getRequest = new HttpGetRequest();
+        String tokenPreferences = getPreferences.getString("token",null);
+        JSONObject tokenDetail = null;
+        try {
+            tokenDetail = new JSONObject(tokenPreferences);
+            String token = tokenDetail.getString("token");
+            String serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
+            role=getRequest.execute(serverIpAddress+"api/GetRole", token).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //
 
         View headerView = navigationView.getHeaderView(0);
         TextView tvfirstAndLastName = (TextView) headerView.findViewById(R.id.person_namee);
@@ -197,8 +219,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.nav_subjects:
-                fragmentClass = SubjectsFragment.class;
+                String s = "\"Teacher\"";
+                if(role.equals(s)){
+                    fragmentClass= ProfessorStudentsFragment.class;
+                }
+                else{
+                    fragmentClass = SubjectsFragment.class;
+                }
                 break;
+            case R.id.nav_logout:
+                SharedPreferences preferences =PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                finish();
+
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+
             default:
                 fragmentClass = AnnouncementsFragment.class;
         }

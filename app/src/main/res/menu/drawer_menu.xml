@@ -24,5 +24,16 @@
             android:id="@+id/nav_school"
             android:icon="@drawable/my_school"
             android:title="School" />
+
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Log out" >
+        </item>
     </group>
 </menu>
