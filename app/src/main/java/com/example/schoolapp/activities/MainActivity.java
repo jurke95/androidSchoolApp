@@ -28,6 +28,7 @@ import com.example.schoolapp.Config.MyApplication;
 import com.example.schoolapp.R;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
 import com.example.schoolapp.fragments.ProfessorStudentsFragment;
+import com.example.schoolapp.fragments.ScheduleFragment;
 import com.example.schoolapp.fragments.ProfessorStudentsFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
 import com.example.schoolapp.fragments.StudentsFragment;
@@ -217,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     fragmentClass = AnnouncementsFragment.class;
                 }
+                break;
+            case R.id.nav_schedule:
+                fragmentClass = ScheduleFragment.class;
                 break;
             case R.id.nav_subjects:
                 String s = "\"Teacher\"";
