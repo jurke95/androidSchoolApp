@@ -31,10 +31,17 @@ public class SubjectsFragment extends Fragment {
     private SubjectsAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private HashMap<String, String> dataSubj;
+    View rootView;
+
+    public static SubjectsFragment newInstance() {
+
+        SubjectsFragment mpf = new SubjectsFragment();
+        return mpf;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View rootView = inflater.inflate(R.layout.fragment_subjects,
+        rootView = inflater.inflate(R.layout.fragment_subjects,
                 container, false);
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -44,24 +51,7 @@ public class SubjectsFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.subjects_recycler_view);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        dataSubj = new HashMap<String, String>();
-        mAdapter = new SubjectsAdapter(getActivity(), dataSubj);
-        recyclerView.setAdapter(mAdapter);
-        new SubjectsTask().execute("subjects");
 
-        return rootView;
-    }
-
-    public class SubjectsTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String result = setSubjects();
-            return result;
-        }
-    }
-
-    String setSubjects(){
         String res;
         Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_CLASS_PERSON +"/id");
         Cursor cursor = getActivity().getContentResolver().query(uri,null,null, null,null);
@@ -74,19 +64,23 @@ public class SubjectsFragment extends Fragment {
 
                 JSONObject jObject = new JSONObject(res.toString());
                 Iterator<?> keys = jObject.keys();
-
+                dataSubj = new HashMap<String, String>();
                 while( keys.hasNext() ){
                     String key = (String)keys.next();
                     String value = jObject.getString(key);
-                    dataSubj.put(key, value);
-                    mAdapter.updateDataset(dataSubj);
 
+                    dataSubj.put(key, value);
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return  "subjects";
+
+        RecyclerView recyclerView =rootView.findViewById(R.id.subjects_recycler_view);
+        SubjectsAdapter adapter = new SubjectsAdapter(getActivity(), dataSubj);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return rootView;
     }
 }

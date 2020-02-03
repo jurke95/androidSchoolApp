@@ -32,6 +32,8 @@ public class SchoolProvider extends ContentProvider {
     private static final int ANNOUNCEMENT = 5;
     private static final int ANNOUNCEMENTS = 7;
     private static final int ACADEMY = 6;
+    private static final int SUBJECT_PERSON_ID = 9;
+    private static final int CLASS_PERSON_UPDATE = 10;
 
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -40,9 +42,11 @@ public class SchoolProvider extends ContentProvider {
     {
         uriMatcher.addURI(AUTHORITY, "class_person/id", CLASS_PERSON_PERSON_ID);
         uriMatcher.addURI(AUTHORITY, "class_person", CLASS_PERSON);
+        uriMatcher.addURI(AUTHORITY, "class_person/update/#", CLASS_PERSON_UPDATE);
         uriMatcher.addURI(AUTHORITY, "person", PERSON);
         uriMatcher.addURI(AUTHORITY, "person/all", PERSONS);
         uriMatcher.addURI(AUTHORITY, "person/#", PERSON_ID);
+        uriMatcher.addURI(AUTHORITY, "class_person/#", SUBJECT_PERSON_ID);
         uriMatcher.addURI(AUTHORITY, "announcement", ANNOUNCEMENT);
         uriMatcher.addURI(AUTHORITY, "announcement/all", ANNOUNCEMENTS);
         uriMatcher.addURI(AUTHORITY, "academy", ACADEMY);
@@ -81,6 +85,9 @@ public class SchoolProvider extends ContentProvider {
             case PERSON_ID:
                 cursor = schoolDatabase.query("TABLE_PERSON", new String[] {"FIRSTNAME", "LASTNAME", "PHONENUMBER", "IMAGEURL", "ID"}, "ID = ?", new String[] {s},null,null,null);
                 break;
+            case SUBJECT_PERSON_ID:
+                cursor = schoolDatabase.query("TABLE_CLASS_PERSON", new String[] {"MARKS"}, "PERSON_ID = ?", new String[] {s},null,null,null);
+                break;
             case ACADEMY:
                 cursor = schoolDatabase.query("TABLE_ACADEMY", new String[] {"NAME", "DESCRIPTION", "LOCATION"}, null,null, null, null,null);
                 break;
@@ -108,6 +115,10 @@ public class SchoolProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/table_academy";
             case PERSON_ID:
                 return "vnd.android.cursor.dir/table_person";
+            case SUBJECT_PERSON_ID:
+                return "vnd.android.cursor.dir/table_class_person";
+            case CLASS_PERSON_UPDATE:
+                return "vnd.android.cursor.dir/table_class_person";
             default:
                 throw new IllegalArgumentException("This is an Unknown URI " + uri);
         }
@@ -161,6 +172,15 @@ public class SchoolProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
+
+        switch (uriMatcher.match(uri)) {
+            case CLASS_PERSON_UPDATE:
+                String personid = uri.getLastPathSegment();
+                schoolDatabase.update(	"TABLE_CLASS_PERSON", contentValues, "PERSON_ID" + "=" + personid,null);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
         return 0;
     }
 }

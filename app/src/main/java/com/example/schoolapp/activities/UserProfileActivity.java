@@ -2,10 +2,13 @@ package com.example.schoolapp.activities;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +21,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.example.schoolapp.R;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -67,6 +75,37 @@ public class UserProfileActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            //info o useru u navigation view
+            SharedPreferences getPreferences = PreferenceManager.getDefaultSharedPreferences(UserProfileActivity.this);
+            String personPreferences = getPreferences.getString("person",null);
+            JSONObject personDetail = null;
+            String firstAndLastName ="";
+            String email = "";
+            String imageUrl = "";
+            try {
+                personDetail = new JSONObject(personPreferences);
+                firstAndLastName = personDetail.getString("firstAndLastName");
+                email = personDetail.getString("email");
+                imageUrl = personDetail.getString("imageUrl");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            View headerView = navigationView.getHeaderView(0);
+            TextView tvfirstAndLastName = (TextView) headerView.findViewById(R.id.person_namee);
+            tvfirstAndLastName.setText(firstAndLastName);
+
+            TextView tvemail = (TextView) headerView.findViewById(R.id.person_email);
+            tvemail.setText(email);
+
+            CircleImageView ivimage = (CircleImageView) headerView.findViewById(R.id.person_image);
+            Glide.with(this)
+                    .asBitmap() //govori glideu da hocemo da bude bitmap
+                    .load(imageUrl)  //hocemo ovaj url
+                    .into(ivimage);
+
+            //
 
             TextView name = findViewById(R.id.student_name);
             name.setText(studentName);
@@ -137,6 +176,15 @@ public class UserProfileActivity extends AppCompatActivity {
             case R.id.nav_school:
                 intent.putExtra("fragment", "5");
                 break;
+            case R.id.nav_logout:
+                SharedPreferences preferences =PreferenceManager.getDefaultSharedPreferences(UserProfileActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                finish();
+
+                startActivity(new Intent(UserProfileActivity.this, LoginActivity.class));
+                finish();
             default:
                 intent.putExtra("fragment", "1");
         }
