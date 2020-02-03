@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.schoolapp.R;
 import com.example.schoolapp.fragments.AnnouncementsFragment;
+import com.example.schoolapp.fragments.ScheduleFragment;
 import com.example.schoolapp.fragments.SchoolFragment;
 import com.example.schoolapp.fragments.StudentsFragment;
 import com.example.schoolapp.fragments.SubjectsFragment;
@@ -194,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     fragmentClass = AnnouncementsFragment.class;
                 }
+                break;
+            case R.id.nav_schedule:
+                fragmentClass = ScheduleFragment.class;
                 break;
             case R.id.nav_subjects:
                 fragmentClass = SubjectsFragment.class;

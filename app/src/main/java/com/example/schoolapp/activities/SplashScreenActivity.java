@@ -56,7 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             if(result == "UserLogin")
             {
-                result = initSubjects(params[0], tokenPreferences);
+                //result = initSubjects(params[0], tokenPreferences);
             }
             if(result == "UserLogin")
             {
