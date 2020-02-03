@@ -239,9 +239,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.nav_logout:
-                SharedPreferences preferences =PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
+                editor.remove("token");
                 editor.commit();
                 finish();
 
