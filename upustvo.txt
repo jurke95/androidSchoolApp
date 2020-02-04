@@ -1,0 +1,25 @@
+-Aplikacija SchoolApp komunicira sa Back-end aplikacijom koja nije deploy-ovana tako da ce aplikacija pruziti 
+potpunu funkcionalnost samo kada je u istoj mrezi kao i Back-end aplikacija.
+-Back-end aplikacija je radjena u .NET Core framework-u 3.0.
+-Link git repozitorijuma Back-end aplikacije: https://github.com/dragandulic/SchoolAPI
+
+-Koriscena je SQL Server baza i skripta baze podataka se nalazi na repozitorijumu Back-end aplikacije.
+-Da bi mogle Android i Back-end aplikacija da komuniciraju potrebno je da se u Android projektu u 
+app\src\main\java\com\example\schoolapp\Config\MyApplication.java fajlu stavi ip adresa servera, a ista ta adresa
+treba da se stavi i u Back-end projekat u School\Properties\launchSettings.json u "School" sekciju na mesto 
+"applicationUrl".
+
+-Kada se pokrenu obe aplikacije, da bi se uspesno logovali mogu se koristiti sledeci nalozi:
+-za ucenike:
+username: aleksandra@gmail.com password:Password123.
+username: dragan@gmail.com password:Password123.
+username: marko@gmail.com password:Password123.
+username: nevena@gmail.com password:Password123.
+
+-za razrednog:
+username: profesor@gmail.com password:Password123.
+username: profesor2@gmail.com password:Password123.
+
+-video sa demonstracijom nase aplikacije je na sledecem linku: https://youtu.be/UplTzHTAPEo
+
+
