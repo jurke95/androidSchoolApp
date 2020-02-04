@@ -1,10 +1,17 @@
 package com.example.schoolapp.fragments;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
@@ -51,6 +58,21 @@ public class ScheduleFragment extends Fragment {
                     Toast.makeText(getActivity(),
                             "Download complete. Download URI: " + string,
                             Toast.LENGTH_LONG).show();
+                    Intent intentt = new Intent("NOTIFICATION");
+                    intentt.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    PendingIntent pendingIntent=PendingIntent.getActivity(getContext(),0,intent,PendingIntent.FLAG_ONE_SHOT);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "M_CH_ID");
+                    notificationBuilder.setContentTitle("Downloaded timetable");
+                    notificationBuilder.setContentText(string);
+                    Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    notificationBuilder.setSound(soundUri);
+                    notificationBuilder.setSmallIcon(R.drawable.school);
+                    notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.school));
+                    notificationBuilder.setAutoCancel(true);
+                    notificationBuilder.setContentIntent(pendingIntent);
+                    NotificationManager notificationManager=(NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(1,notificationBuilder.build());
+
                     textView.setText("Download done");
                 } else {
                     Toast.makeText(getActivity(), "Download failed",

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -200,6 +201,7 @@ public class SubjectsActivity extends AppCompatActivity {
                     values.put("MARKS",obj.toString());
                     Uri uri = Uri.parse(SchoolProvider.CONTENT_URI_CLASS_PERSON +"/update/"+student_id);
                     getContentResolver().update(uri,values,null,null);
+                    Toast.makeText(getApplicationContext(),"Saved grades for student.",Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

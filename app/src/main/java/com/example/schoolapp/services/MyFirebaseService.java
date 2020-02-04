@@ -84,8 +84,8 @@ public class MyFirebaseService extends FirebaseMessagingService {
         notificationBuilder.setContentText(message);
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         notificationBuilder.setSound(soundUri);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),R.mipmap.ic_launcher));
+        notificationBuilder.setSmallIcon(R.drawable.school);
+        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),R.drawable.school));
         notificationBuilder.setAutoCancel(true);
         Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(1000);

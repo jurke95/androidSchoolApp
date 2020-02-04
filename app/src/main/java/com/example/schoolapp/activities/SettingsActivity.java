@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -64,9 +65,11 @@ public  class SettingsActivity extends AppCompatActivity {
         schoolDatabase = new DatabaseHelper(this);
         serverIpAddress = ((MyApplication) this.getApplication()).getServerIpAddress();
         context = getApplicationContext();
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         if(findViewById(R.id.fragment_container)!=null)
         {

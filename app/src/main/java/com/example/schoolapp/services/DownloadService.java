@@ -8,13 +8,25 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Environment;
 
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Vibrator;
+import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.example.schoolapp.R;
+import com.example.schoolapp.activities.MainActivity;
 
 public class DownloadService extends IntentService {
 
@@ -76,12 +88,12 @@ public class DownloadService extends IntentService {
         publishResults(output.getAbsolutePath(), result);
     }
 
-    private void publishResults(String outputPath, int result) {
+    private void publishResults(String outputPath, int result)
+    {
         Intent intent = new Intent(NOTIFICATION);
         intent.putExtra(FILEPATH, outputPath);
         intent.putExtra(RESULT, result);
         sendBroadcast(intent);
+
     }
-
-
 }

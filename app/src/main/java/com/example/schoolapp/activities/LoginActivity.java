@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -69,8 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else
         {
-            finish();
-            startActivity(getIntent());
+            Toast.makeText(getApplicationContext(),"Invalid email or password.",Toast.LENGTH_LONG).show();
         }
 
 
